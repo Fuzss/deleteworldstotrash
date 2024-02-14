@@ -1,6 +1,6 @@
 package fuzs.deleteworldstotrash.mixin.client;
 
-import fuzs.deleteworldstotrash.world.level.storage.WorldTrashUtil;
+import fuzs.deleteworldstotrash.client.handler.WorldTrashHandler;
 import net.minecraft.util.DirectoryLock;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import org.spongepowered.asm.mixin.Final;
@@ -10,8 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.nio.file.Path;
-
 @Mixin(LevelStorageSource.LevelStorageAccess.class)
 abstract class LevelStorageAccessMixin {
     @Shadow
@@ -20,9 +18,21 @@ abstract class LevelStorageAccessMixin {
     @Shadow
     @Final
     LevelStorageSource.LevelDirectory levelDirectory;
+    @Shadow
+    @Final
+    private String levelId;
 
-    @Inject(method = "deleteLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;checkLock()V", shift = At.Shift.AFTER), cancellable = true)
+    @Inject(method = "deleteLevel", at = @At("HEAD"), cancellable = true)
     public void deleteLevel(CallbackInfo callback) {
-        if (WorldTrashUtil.tryMoveToTrash(this.lock, this.levelDirectory.path())) callback.cancel();
+        if (WorldTrashHandler.isTrashSupported()) {
+            this.checkLock();
+            WorldTrashHandler.tryMoveToTrash(this.lock, this.levelDirectory.path(), this.levelId);
+            callback.cancel();
+        }
+    }
+
+    @Shadow
+    private void checkLock() {
+        throw new RuntimeException();
     }
 }
