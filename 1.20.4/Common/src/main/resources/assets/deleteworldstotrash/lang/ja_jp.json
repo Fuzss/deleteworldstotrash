@@ -1,0 +1,9 @@
+{
+    "deleteworldstotrash.selectWorld.deleteButton": "%sへ移動",
+    "deleteworldstotrash.selectWorld.deleteFailure": "%sへ移動できませんでした",
+    "deleteworldstotrash.selectWorld.deleteWarning": "「%s」が%sへ移されます。後から復元することができます",
+    "deleteworldstotrash.selectWorld.recycleBin": "ゴミ箱",
+    "deleteworldstotrash.selectWorld.recycleBinButton": "ゴミ箱",
+    "deleteworldstotrash.selectWorld.trash": "削除",
+    "deleteworldstotrash.selectWorld.trashButton": "削除"
+}
