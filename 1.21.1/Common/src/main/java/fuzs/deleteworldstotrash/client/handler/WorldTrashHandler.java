@@ -31,7 +31,9 @@ public class WorldTrashHandler {
         for (Map.Entry<ResourceLocation, WorldRecycler> entry : SUPPORTED_RECYCLERS.entrySet()) {
             if (entry.getValue().isSupported()) {
                 for (int i = 0; i < MAX_DELETE_WORLD_ATTEMPTS; ++i) {
-                    DeleteWorldsToTrash.LOGGER.info("Attempt {} moving {} to trash using {}...", i + 1, levelId, entry.getKey());
+                    DeleteWorldsToTrash.LOGGER.info("Attempt {} moving {} to trash using {}",
+                            i + 1, levelId, entry.getKey()
+                    );
                     try {
                         lock.close();
                         if (entry.getValue().moveToTrash(levelPath.toFile())) {

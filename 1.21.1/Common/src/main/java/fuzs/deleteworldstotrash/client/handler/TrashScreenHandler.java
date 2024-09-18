@@ -24,12 +24,7 @@ public class TrashScreenHandler {
                 worldListEntry.doDeleteWorld();
             }
             minecraft.setScreen(lastScreen);
-        },
-                Component.translatable("selectWorld.deleteQuestion"),
-                getDeleteWarningComponent(summary.getLevelName()),
-                Component.translatable("selectWorld.deleteButton"),
-                CommonComponents.GUI_CANCEL
-        ));
+        }, Component.translatable("selectWorld.deleteQuestion"), getDeleteWarningComponent(summary.getLevelName()), Component.translatable("selectWorld.deleteButton"), CommonComponents.GUI_CANCEL));
     }
 
     private static Component getDeleteWarningComponent(Object o) {
@@ -48,11 +43,6 @@ public class TrashScreenHandler {
                 worldListEntry.doDeleteWorld();
             }
             minecraft.setScreen(lastScreen);
-        },
-                Component.translatable("selectWorld.deleteQuestion"),
-                Component.translatable("selectWorld.deleteWarning", summary.getLevelName()),
-                Component.translatable("selectWorld.deleteButton"),
-                CommonComponents.GUI_CANCEL
-        ));
+        }, Component.translatable("selectWorld.deleteQuestion"), Component.translatable("selectWorld.deleteWarning", summary.getLevelName()), Component.translatable("selectWorld.deleteButton"), CommonComponents.GUI_CANCEL));
     }
 }

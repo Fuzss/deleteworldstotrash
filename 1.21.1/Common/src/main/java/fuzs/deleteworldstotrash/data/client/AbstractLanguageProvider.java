@@ -15,12 +15,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.StatType;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.GameRules;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class AbstractLanguageProvider implements DataProvider {
@@ -59,7 +62,11 @@ public abstract class AbstractLanguageProvider implements DataProvider {
                 jsonObject.addProperty(key, value);
             }
         });
-        return DataProvider.saveStable(writer, jsonObject, this.pathProvider.json(new ResourceLocation(this.modId, this.languageCode)));
+
+        return DataProvider.saveStable(writer,
+                jsonObject,
+                this.pathProvider.json(ResourceLocation.fromNamespaceAndPath(this.modId, this.languageCode))
+        );
     }
 
     @Override
@@ -71,20 +78,20 @@ public abstract class AbstractLanguageProvider implements DataProvider {
     @FunctionalInterface
     public interface TranslationBuilder {
 
-        void add(String key, String value);
+        void add(String translationKey, String value);
 
-        default void add(String key, String additionalKey, String value) {
+        default void add(String translationKey, String additionalKey, String value) {
             Objects.requireNonNull(additionalKey, "additional key is null");
-            this.add(key + (additionalKey.isEmpty() ? "" : "." + additionalKey), value);
+            this.add(translationKey + (additionalKey.isEmpty() ? "" : "." + additionalKey), value);
         }
 
-        default void add(ResourceLocation identifier, String value) {
-            this.add(identifier, "", value);
+        default void add(ResourceLocation resourceLocation, String value) {
+            this.add(resourceLocation, "", value);
         }
 
-        default void add(ResourceLocation identifier, String additionalKey, String value) {
-            Objects.requireNonNull(identifier, "identifier is null");
-            this.add(identifier.toLanguageKey(), additionalKey, value);
+        default void add(ResourceLocation resourceLocation, String additionalKey, String value) {
+            Objects.requireNonNull(resourceLocation, "resource location is null");
+            this.add(resourceLocation.toLanguageKey(), additionalKey, value);
         }
 
         default void add(String registry, Holder<?> holder, String value) {
@@ -105,6 +112,10 @@ public abstract class AbstractLanguageProvider implements DataProvider {
             this.add(Util.makeDescriptionId(registry, resourceLocation), value);
         }
 
+        default void add(TagKey<?> tagKey, String value) {
+            this.add("tag." + tagKey.location().toLanguageKey(tagKey.registry().location().getPath()), value);
+        }
+
         default void add(Block block, String value) {
             this.add(block, "", value);
         }
@@ -112,6 +123,14 @@ public abstract class AbstractLanguageProvider implements DataProvider {
         default void add(Block block, String additionalKey, String value) {
             Objects.requireNonNull(block, "block is null");
             this.add(block.getDescriptionId(), additionalKey, value);
+        }
+
+        default void addSpawnEgg(Item item, String value) {
+            if (item instanceof SpawnEggItem) {
+                this.add(item, value + " Spawn Egg");
+            } else {
+                throw new IllegalArgumentException("Unsupported item: " + item);
+            }
         }
 
         default void add(Item item, String value) {
@@ -123,13 +142,24 @@ public abstract class AbstractLanguageProvider implements DataProvider {
             this.add(item.getDescriptionId(), additionalKey, value);
         }
 
-        default void add(Enchantment enchantment, String value) {
-            this.add(enchantment, "", value);
+        default void addEnchantment(ResourceKey<Enchantment> enchantment, String value) {
+            this.addEnchantment(enchantment, "", value);
         }
 
-        default void add(Enchantment enchantment, String additionalKey, String value) {
+        default void addEnchantment(ResourceKey<Enchantment> enchantment, String additionalKey, String value) {
             Objects.requireNonNull(enchantment, "enchantment is null");
-            this.add(enchantment.getDescriptionId(), additionalKey, value);
+            String translationKey = Util.makeDescriptionId(enchantment.registry().getPath(), enchantment.location());
+            this.add(translationKey, additionalKey, value);
+        }
+
+        default void addMobEffect(Holder<MobEffect> mobEffect, String value) {
+            Objects.requireNonNull(mobEffect, "mob effect is null");
+            this.add(mobEffect.value(), value);
+        }
+
+        default void addMobEffect(Holder<MobEffect> mobEffect, String additionalKey, String value) {
+            Objects.requireNonNull(mobEffect, "mob effect is null");
+            this.add(mobEffect.value(), additionalKey, value);
         }
 
         default void add(MobEffect mobEffect, String value) {
@@ -167,9 +197,9 @@ public abstract class AbstractLanguageProvider implements DataProvider {
             Objects.requireNonNull(statType, "stat type is null");
             Objects.requireNonNull(statType.getDisplayName(), "component is null");
             if (statType.getDisplayName().getContents() instanceof TranslatableContents contents) {
-                this.add(contents.getKey(), value);
+                this.add(contents.getKey(), additionalKey, value);
             } else {
-                throw new UnsupportedOperationException("Unsupported component: " + statType.getDisplayName());
+                throw new IllegalArgumentException("Unsupported component: " + statType.getDisplayName());
             }
         }
 
@@ -186,9 +216,9 @@ public abstract class AbstractLanguageProvider implements DataProvider {
             this.add(gameRule.getDescriptionId(), additionalKey, value);
         }
 
-        default void add(Potion potion, String value) {
+        default void addPotion(Holder<Potion> potion, String value) {
             Objects.requireNonNull(potion, "potion is null");
-            String potionName = potion.getName("");
+            String potionName = Potion.getName(Optional.of(potion), "");
             this.add("item.minecraft.tipped_arrow.effect." + potionName, "Arrow of " + value);
             this.add("item.minecraft.potion.effect." + potionName, "Potion of " + value);
             this.add("item.minecraft.splash_potion.effect." + potionName, "Splash Potion of " + value);
@@ -205,6 +235,10 @@ public abstract class AbstractLanguageProvider implements DataProvider {
             this.add(keyMapping.getName(), value);
         }
 
+        default void addKeyCategory(String modId, String value) {
+            this.add("key.categories." + modId, value);
+        }
+
         default void addCreativeModeTab(String modId, String value) {
             this.addCreativeModeTab(modId, "main", value);
         }
@@ -212,12 +246,12 @@ public abstract class AbstractLanguageProvider implements DataProvider {
         default void addCreativeModeTab(String modId, String tabId, String value) {
             Objects.requireNonNull(modId, "mod id is null");
             Objects.requireNonNull(tabId, "tab id is null");
-            this.addCreativeModeTab(new ResourceLocation(modId, tabId), value);
+            this.addCreativeModeTab(ResourceLocation.fromNamespaceAndPath(modId, tabId), value);
         }
 
-        default void addCreativeModeTab(ResourceLocation identifier, String value) {
-            Objects.requireNonNull(identifier, "identifier is null");
-            this.addCreativeModeTab(ResourceKey.create(Registries.CREATIVE_MODE_TAB, identifier), value);
+        default void addCreativeModeTab(ResourceLocation resourceLocation, String value) {
+            Objects.requireNonNull(resourceLocation, "resource location is null");
+            this.addCreativeModeTab(ResourceKey.create(Registries.CREATIVE_MODE_TAB, resourceLocation), value);
         }
 
         default void addCreativeModeTab(ResourceKey<CreativeModeTab> resourceKey, String value) {
@@ -235,7 +269,7 @@ public abstract class AbstractLanguageProvider implements DataProvider {
             if (component.getContents() instanceof TranslatableContents contents) {
                 this.add(contents.getKey(), value);
             } else {
-                throw new UnsupportedOperationException("Unsupported component: " + component);
+                throw new IllegalArgumentException("Unsupported component: " + component);
             }
         }
 

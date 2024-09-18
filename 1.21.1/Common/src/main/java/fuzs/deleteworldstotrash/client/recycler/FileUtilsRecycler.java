@@ -8,7 +8,8 @@ import java.io.IOException;
 /**
  * Designed to work on Windows and Mac.
  *
- * @see <a href="https://www.rgagnon.com/javadetails/java-move-files-to-windows-trash-jna.html">Move files to Windows Trash (JNA)</a>
+ * @see <a href="https://www.rgagnon.com/javadetails/java-move-files-to-windows-trash-jna.html">Move files to Windows
+ *         Trash (JNA)</a>
  */
 public class FileUtilsRecycler implements WorldRecycler {
 
