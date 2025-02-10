@@ -2,6 +2,7 @@ package fuzs.deleteworldstotrash.client.handler;
 
 import com.google.common.collect.Maps;
 import fuzs.deleteworldstotrash.DeleteWorldsToTrash;
+import fuzs.deleteworldstotrash.DeleteWorldsToTrashMod;
 import fuzs.deleteworldstotrash.client.recycler.DesktopRecycler;
 import fuzs.deleteworldstotrash.client.recycler.FileUtilsRecycler;
 import fuzs.deleteworldstotrash.client.recycler.WorldRecycler;
@@ -17,8 +18,8 @@ public class WorldTrashHandler {
     private static final Map<ResourceLocation, WorldRecycler> SUPPORTED_RECYCLERS = Maps.newHashMap();
 
     static {
-        registerRecycler(DeleteWorldsToTrash.id("file_utils"), new FileUtilsRecycler());
-        registerRecycler(DeleteWorldsToTrash.id("desktop"), new DesktopRecycler());
+        registerRecycler(DeleteWorldsToTrashMod.id("file_utils"), new FileUtilsRecycler());
+        registerRecycler(DeleteWorldsToTrashMod.id("desktop"), new DesktopRecycler());
     }
 
     private static final int MAX_DELETE_WORLD_ATTEMPTS = 5;

@@ -11,9 +11,10 @@ public class DeleteWorldsToTrashNeoForge {
 
     public DeleteWorldsToTrashNeoForge(ModContainer modContainer) {
 //        ModConstructor.construct(DeleteWorldsToTrash.MOD_ID, DeleteWorldsToTrash::new);
-        modContainer.getEventBus().addListener((final GatherDataEvent evt) -> {
-            evt.getGenerator().addProvider(true, new ModLanguageProvider(DeleteWorldsToTrash.MOD_ID, evt.getGenerator()
-                    .getPackOutput()));
+        modContainer.getEventBus().addListener((final GatherDataEvent.Client evt) -> {
+            evt.getGenerator()
+                    .addProvider(true,
+                            new ModLanguageProvider(DeleteWorldsToTrash.MOD_ID, evt.getGenerator().getPackOutput()));
         });
     }
 }
