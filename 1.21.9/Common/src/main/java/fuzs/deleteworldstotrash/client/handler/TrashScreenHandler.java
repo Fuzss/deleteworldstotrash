@@ -17,13 +17,14 @@ public class TrashScreenHandler {
     public static final String KEY_DELETE_WARNING_RECYCLE_BIN =
             DeleteWorldsToTrash.MOD_ID + ".selectWorld.deleteButton.recycle_bin";
 
-    public static void setDeleteWorldScreen(Minecraft minecraft, Screen lastScreen, WorldSelectionList.WorldListEntry worldListEntry, LevelSummary summary) {
+    public static void setDeleteWorldScreen(Minecraft minecraft, WorldSelectionList list, WorldSelectionList.WorldListEntry worldListEntry, LevelSummary summary) {
         minecraft.setScreen(new ConfirmScreen((boolean accepted) -> {
             if (accepted) {
                 minecraft.setScreen(new ProgressScreen(true));
                 worldListEntry.doDeleteWorld();
             }
-            minecraft.setScreen(lastScreen);
+
+            list.returnToScreen();
         }, Component.translatable("selectWorld.deleteQuestion"), getDeleteWarningComponent(summary.getLevelName()), Component.translatable("selectWorld.deleteButton"), CommonComponents.GUI_CANCEL));
     }
 

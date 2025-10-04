@@ -12,15 +12,14 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 public class DeleteWorldsToTrashClientNeoForge {
 
     public DeleteWorldsToTrashClientNeoForge(ModContainer modContainer) {
-//        ClientModConstructor.construct(DeleteWorldsToTrash.MOD_ID, DeleteWorldsToTrashClient::new);
         registerLoadingHandlers(modContainer.getEventBus());
     }
 
     private static void registerLoadingHandlers(IEventBus eventBus) {
-        eventBus.addListener((final GatherDataEvent.Client evt) -> {
-            evt.getGenerator()
+        eventBus.addListener((final GatherDataEvent.Client event) -> {
+            event.getGenerator()
                     .addProvider(true,
-                            new ModLanguageProvider(DeleteWorldsToTrash.MOD_ID, evt.getGenerator().getPackOutput()));
+                            new ModLanguageProvider(DeleteWorldsToTrash.MOD_ID, event.getGenerator().getPackOutput()));
         });
     }
 }
