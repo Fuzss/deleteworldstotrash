@@ -15,6 +15,9 @@ import java.util.List;
 
 public class WorldTrashHandler {
     private static final int MAX_DELETE_WORLD_ATTEMPTS = 5;
+    /**
+     * The {@link java.awt.Desktop} class is broken on NeoForge and freezes the whole game; so avoid it at all cost.
+     */
     private static final List<WorldRecycler> SYSTEM_RECYCLERS =
             CommonAbstractions.INSTANCE.isForgeLike() ? ImmutableList.of(FileUtilsRecycler.INSTANCE) :
                     ImmutableList.of(FileUtilsRecycler.INSTANCE, DesktopRecycler.INSTANCE);
