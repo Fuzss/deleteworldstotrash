@@ -1,0 +1,9 @@
+{
+  "deleteworldstotrash.selectWorld.deleteWarning": "'%s' verrà spostato nel %s, quindi puoi ripristinarlo in seguito se necessario.",
+  "deleteworldstotrash.selectWorld.deleteFailure": "Spostamento al %s fallito",
+  "deleteworldstotrash.selectWorld.recycleBin": "cestino",
+  "deleteworldstotrash.selectWorld.trash": "spazzatura",
+  "deleteworldstotrash.selectWorld.deleteButton": "Sposta nel %s",
+  "deleteworldstotrash.selectWorld.recycleBinButton": "Cestino",
+  "deleteworldstotrash.selectWorld.trashButton": "Spazzatura"
+}
