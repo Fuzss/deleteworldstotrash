@@ -5,6 +5,8 @@ import java.io.IOException;
 
 public interface WorldRecycler {
 
+    String getName();
+
     boolean isSupported();
 
     boolean moveToTrash(File file) throws IOException;

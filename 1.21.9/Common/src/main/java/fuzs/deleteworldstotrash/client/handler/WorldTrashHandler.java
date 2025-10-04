@@ -1,43 +1,35 @@
 package fuzs.deleteworldstotrash.client.handler;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableList;
 import fuzs.deleteworldstotrash.DeleteWorldsToTrash;
-import fuzs.deleteworldstotrash.DeleteWorldsToTrashMod;
 import fuzs.deleteworldstotrash.client.recycler.DesktopRecycler;
 import fuzs.deleteworldstotrash.client.recycler.FileUtilsRecycler;
 import fuzs.deleteworldstotrash.client.recycler.WorldRecycler;
+import fuzs.deleteworldstotrash.services.CommonAbstractions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.DirectoryLock;
 
 import java.nio.file.Path;
-import java.util.Map;
+import java.util.List;
 
 public class WorldTrashHandler {
-    private static final Map<ResourceLocation, WorldRecycler> SUPPORTED_RECYCLERS = Maps.newHashMap();
-
-    static {
-        registerRecycler(DeleteWorldsToTrashMod.id("file_utils"), new FileUtilsRecycler());
-        registerRecycler(DeleteWorldsToTrashMod.id("desktop"), new DesktopRecycler());
-    }
-
     private static final int MAX_DELETE_WORLD_ATTEMPTS = 5;
-
-    public static void registerRecycler(ResourceLocation resourceLocation, WorldRecycler worldRecycler) {
-        SUPPORTED_RECYCLERS.put(resourceLocation, worldRecycler);
-    }
+    private static final List<WorldRecycler> SYSTEM_RECYCLERS =
+            CommonAbstractions.INSTANCE.isForgeLike() ? ImmutableList.of(FileUtilsRecycler.INSTANCE) :
+                    ImmutableList.of(FileUtilsRecycler.INSTANCE, DesktopRecycler.INSTANCE);
 
     public static boolean tryMoveToTrash(DirectoryLock lock, Path levelPath, String levelId) {
-        for (Map.Entry<ResourceLocation, WorldRecycler> entry : SUPPORTED_RECYCLERS.entrySet()) {
-            if (entry.getValue().isSupported()) {
+        for (WorldRecycler recycler : SYSTEM_RECYCLERS) {
+            if (recycler.isSupported()) {
                 for (int i = 0; i < MAX_DELETE_WORLD_ATTEMPTS; ++i) {
                     DeleteWorldsToTrash.LOGGER.info("Attempt {} moving {} to trash using {}",
-                            i + 1, levelId, entry.getKey()
-                    );
+                            i + 1,
+                            levelId,
+                            recycler.getName());
                     try {
                         lock.close();
-                        if (entry.getValue().moveToTrash(levelPath.toFile())) {
+                        if (recycler.moveToTrash(levelPath.toFile())) {
                             return true;
                         }
                     } catch (Throwable throwable) {
@@ -46,16 +38,18 @@ public class WorldTrashHandler {
                 }
             }
         }
+
         SystemToast.onWorldDeleteFailure(Minecraft.getInstance(), levelId);
         return false;
     }
 
     public static boolean isTrashSupported() {
-        for (WorldRecycler worldRecycler : SUPPORTED_RECYCLERS.values()) {
+        for (WorldRecycler worldRecycler : SYSTEM_RECYCLERS) {
             if (worldRecycler.isSupported()) {
                 return true;
             }
         }
+
         return false;
     }
 }
