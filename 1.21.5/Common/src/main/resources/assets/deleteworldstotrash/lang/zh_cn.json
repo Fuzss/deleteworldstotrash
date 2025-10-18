@@ -1,9 +1,4 @@
 {
-"deleteworldstotrash.selectWorld.deleteWarning": "“%s”将被移动到您电脑的回收站中",
-"deleteworldstotrash.selectWorld.deleteFailure": "移动“%s”失败",
-"deleteworldstotrash.selectWorld.recycleBin": "回收站",
-"deleteworldstotrash.selectWorld.trash": "移至回收站",
-"deleteworldstotrash.selectWorld.deleteButton": "移动到%s",
-"deleteworldstotrash.selectWorld.recycleBinButton": "回收站",
-"deleteworldstotrash.selectWorld.trashButton": "移至回收站"
+  "deleteworldstotrash.selectWorld.deleteButton.recycle_bin": "'%s' 将被移动到回收站，以便您之后需要恢复它。",
+  "deleteworldstotrash.selectWorld.deleteButton.trash": "'%s' 将被移动到废纸篓，以便您之后需要恢复它。"
 }
