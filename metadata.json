@@ -1,10 +1,10 @@
 {
-    "minecraft": "26.1.2",
+    "minecraft": "26.2",
     "mod": {
         "id": "deleteworldstotrash",
         "group": "fuzs.deleteworldstotrash",
         "name": "Delete Worlds To Trash",
-        "version": "26.1.2",
+        "version": "26.2.0",
         "authors": [
             "Fuzs"
         ],

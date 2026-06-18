@@ -1,13 +1,13 @@
 package fuzs.deleteworldstotrash.common.client.handler;
 
 import fuzs.deleteworldstotrash.common.DeleteWorldsToTrash;
-import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldSelectionList;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.LevelSummary;
 
 public class TrashScreenHandler {
@@ -17,9 +17,9 @@ public class TrashScreenHandler {
             DeleteWorldsToTrash.MOD_ID + ".selectWorld.deleteButton.recycle_bin";
 
     public static void setDeleteWorldScreen(Minecraft minecraft, WorldSelectionList list, WorldSelectionList.WorldListEntry worldListEntry, LevelSummary summary) {
-        minecraft.setScreen(new ConfirmScreen((boolean accepted) -> {
-            if (accepted) {
-                minecraft.setScreen(new ProgressScreen(true));
+        minecraft.gui.setScreen(new ConfirmScreen((boolean shouldOpen) -> {
+            if (shouldOpen) {
+                minecraft.gui.setScreen(new ProgressScreen(true));
                 worldListEntry.doDeleteWorld();
             }
 
