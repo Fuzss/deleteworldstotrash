@@ -1,8 +1,15 @@
 {
   "branches": {
-    "26.1.x": "maintained",
-    "1.21.1": "maintained",
     "1.20.1": "fixes",
+    "1.21.1": "maintained",
+    "26.1.x": "maintained",
     "26.2.x": "primary"
+  },
+  "properties": {
+    "distributions.curseforge.id": "571076",
+    "distributions.curseforge.slug": "delete-worlds-to-trash",
+    "distributions.github.slug": "delete-worlds-to-trash",
+    "distributions.modrinth.id": "7diJQfvM",
+    "distributions.modrinth.slug": "delete-worlds-to-trash"
   }
 }
