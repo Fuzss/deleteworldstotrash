@@ -5,11 +5,17 @@
     "26.1.x": "maintained",
     "26.2.x": "primary"
   },
-  "properties": {
-    "distributions.curseforge.id": "571076",
-    "distributions.curseforge.slug": "delete-worlds-to-trash",
-    "distributions.github.slug": "delete-worlds-to-trash",
-    "distributions.modrinth.id": "7diJQfvM",
-    "distributions.modrinth.slug": "delete-worlds-to-trash"
+  "distributions": {
+    "curseforge": {
+      "id": "571076",
+      "slug": "delete-worlds-to-trash"
+    },
+    "github": {
+      "slug": "delete-worlds-to-trash"
+    },
+    "modrinth": {
+      "id": "7diJQfvM",
+      "slug": "delete-worlds-to-trash"
+    }
   }
 }
