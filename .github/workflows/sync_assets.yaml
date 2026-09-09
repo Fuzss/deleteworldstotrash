@@ -97,15 +97,15 @@ jobs:
               git checkout -B "$name" "origin/$name"
 
               sync_asset \
-                /tmp/mod-assets/pack.png \
+                /tmp/assets/pack.png \
                 Common/src/main/resources/pack.png
 
               sync_asset \
-                /tmp/mod-assets/mod_logo.png \
+                /tmp/assets/mod_logo.png \
                 Common/src/main/resources/mod_logo.png
 
               sync_asset \
-                /tmp/mod-assets/mod_banner.png \
+                /tmp/assets/mod_banner.png \
                 Common/src/main/resources/mod_banner.png
 
               # Stage and commit changes only if there are any
