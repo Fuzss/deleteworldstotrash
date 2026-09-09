@@ -96,8 +96,8 @@ jobs:
               # Switch to version branch, create local branch if needed
               git checkout -B "$name" "origin/$name"
 
-              if [ -f /tmp/mod-assets/banner.png ]; then
-                cp /tmp/mod-assets/banner.png banner.png
+              if [ -f /tmp/assets/banner.png ]; then
+                cp /tmp/assets/banner.png banner.png
               fi
 
               sync_asset \
