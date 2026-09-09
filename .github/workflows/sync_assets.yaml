@@ -109,9 +109,7 @@ jobs:
                 Common/src/main/resources/mod_banner.png
 
               # Stage and commit changes only if there are any
-              git add \
-                '*.png' \
-                'Common/src/main/resources/*.png'
+              git add -A
 
               git diff-index --quiet HEAD || {
                 git commit -m "Sync assets [skip ci]"
